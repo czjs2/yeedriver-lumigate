@@ -2,7 +2,7 @@ const dgram = require('dgram')
 const os = require('os')
 const events = require('events');
 const _ = require('lodash');
-const consts = require('../../../consts')
+const consts = require('yeedriver-base/consts')
 const {MULTICAST_ADDRESS, DISCOVERY_PORT, SERVER_PORT} = require('./constants');
 const Gateway = require('./lib/gateway');
 
