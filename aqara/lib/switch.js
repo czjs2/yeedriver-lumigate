@@ -10,7 +10,7 @@ const Subdevice = require('./subdevice')
 const SWITCH_WQ ={
   'click':1,
   'press':2,
-  'dbclick':60010,
+  'dbclick':3,
   'battery':60011
 }
 class Switch extends Subdevice {

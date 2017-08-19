@@ -33,7 +33,7 @@ LumiGate.prototype.initDriver = function (options, memories) {
 //            console.log('Gateway discovered')
             gateway.on('ready', () => {
                 console.log('Gateway is ready')
-                gateway.setPassword((options.tokens && options.tokens[gateway.sid]) || 'sotxcen2i4otuj7z');
+                gateway.setPassword((_.isObject(options.tokens) && options.tokens[gateway.sid]) || 'sotxcen2i4otuj7z');
                 gateway.setColor({r: 255, g: 0, b: 0});
                 gateway.setIntensity(100)
             });
