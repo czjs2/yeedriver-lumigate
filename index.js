@@ -21,7 +21,7 @@ function LumiGate(maxSegLength, minGapLength) {
 }
 util.inherits(LumiGate, WorkerBase);
 LumiGate.prototype.initDriver = function (options, memories) {
-    this.rawOptions = options;
+    this.rawOptions = options ||  {};
     let self = this;
     if (!this.inited) {
         this.inited = true;
@@ -33,7 +33,7 @@ LumiGate.prototype.initDriver = function (options, memories) {
 //            console.log('Gateway discovered')
             gateway.on('ready', () => {
                 console.log('Gateway is ready')
-                gateway.setPassword((_.isObject(options.tokens) && options.tokens[gateway.sid]) || 'sotxcen2i4otuj7z');
+                gateway.setPassword((_.isObject(this.rawOptions.tokens) && this.rawOptions.tokens[gateway.sid]) || 'sotxcen2i4otuj7z');
                 gateway.setColor({r: 255, g: 0, b: 0});
                 gateway.setIntensity(100)
             });
@@ -149,7 +149,7 @@ LumiGate.prototype.initDriver = function (options, memories) {
 
         });
     }else{
-        this.gatewayMaster.setTokens(options.tokens);
+        this.gatewayMaster.setTokens(_.isObject(this.rawOptions.tokens)? this.rawOptions.tokens : {});
     }
 }
 LumiGate.prototype.WriteWQ = function (mapItem, value, devId) {

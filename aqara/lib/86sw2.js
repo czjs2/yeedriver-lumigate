@@ -15,8 +15,8 @@ const SWITCH_WQ ={
     'left':1,
     'right':2,
     'bclick':3,
-    'ldbclick':60010,
-    'rdbclick':60011,
+    'ldbclick':4,
+    'rdbclick':5,
 
 }
 class Sw86_2 extends Subdevice {

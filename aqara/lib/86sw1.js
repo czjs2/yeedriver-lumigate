@@ -13,7 +13,7 @@ const Subdevice = require('./subdevice');
  */
 const SWITCH_WQ ={
     'left':1,
-    'ldbclick':60010,
+    'ldbclick':2,
 
 
 }
