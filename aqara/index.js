@@ -52,7 +52,7 @@ class Aqara extends events.EventEmitter {
     _handleMessage(msg) {
         const parsed = JSON.parse(msg.toString());
 
-        console.log('get message:', JSON.stringify(parsed));
+        //console.log('get message:', JSON.stringify(parsed));
         let handled = false;
 
         switch (parsed.cmd) {

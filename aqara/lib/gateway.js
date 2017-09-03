@@ -189,15 +189,15 @@ class Gateway extends events.EventEmitter {
       this.wqs[WQInfo._color] = {r:buf.readUInt8(1),g:buf.readUInt8(2),b:buf.readUInt8(3),alpha:buf.readUInt8(0)};
       this.wqs[WQInfo.intensity] = buf.readUInt8(0);
       //this.emit('lightState', { color: this._color, intensity: this._intensity })
-      this.triggerWq(this._sid,WQInfo._color,this.wqs[WQInfo._color],cmd);
-      this.triggerWq(this._sid,WQInfo.intensity,this.wqs[WQInfo.intensity],cmd);
+      this.triggerWq(this._sid,WQInfo._color,cmd);
+      this.triggerWq(this._sid,WQInfo.intensity,cmd);
 
     }
 
 
     if(state.illumination !== undefined){
       this.wqs[WQInfo.illumination] = parseFloat(state.illumination);
-      this.triggerWq(this._sid,WQInfo.illumination,this.wqs[WQInfo.illumination],cmd);
+      this.triggerWq(this._sid,WQInfo.illumination,cmd);
     }
 
     if(state.mid !== undefined){
@@ -208,8 +208,8 @@ class Gateway extends events.EventEmitter {
         this.wqs[WQInfo.music_switch] = true;
         this.wqs[WQInfo.music_id] = state.mid;
       }
-        this.triggerWq(this._sid,WQInfo.music_switch,this.wqs[WQInfo.music_switch],cmd);
-        this.triggerWq(this._sid,WQInfo.music_id,this.wqs[WQInfo.music_id],cmd);
+        this.triggerWq(this._sid,WQInfo.music_switch,cmd);
+        this.triggerWq(this._sid,WQInfo.music_id,cmd);
     }
 
 
@@ -320,7 +320,7 @@ class Gateway extends events.EventEmitter {
               this.pending_write = [WQInfo.music_id];
             this.writeValueToDev('mid',this.wqs_target[WQInfo.music_id]);
           }
-          this.triggerWq(this._sid,WQInfo.music_id,value,'write_ack');
+          this.triggerWq(this._sid,WQInfo.music_id,'write_ack');
         break;
         case WQInfo.volumn:
             this.wqs_target[WQInfo.volumn] = value;
@@ -328,7 +328,7 @@ class Gateway extends events.EventEmitter {
                 this.pending_write = [WQInfo.volumn];
                 this.writeValueToDev('volumn',this.wqs_target[WQInfo.volumn]);
             }
-            this.triggerWq(this._sid,WQInfo.volumn,value,'write_ack');
+            this.triggerWq(this._sid,WQInfo.volumn,'write_ack');
             break;
       case WQInfo.music_switch:
         this.wqs_target[WQInfo.music_switch] = value;
@@ -339,7 +339,7 @@ class Gateway extends events.EventEmitter {
               this.pending_write = [WQInfo.music_switch];
             this.writeValueToDev('mid',10000);
           }
-          this.triggerWq(this._sid,WQInfo.music_switch,value,'write_ack');
+          this.triggerWq(this._sid,WQInfo.music_switch,'write_ack');
             break;
     }
   }
