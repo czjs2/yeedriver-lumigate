@@ -20,7 +20,7 @@ const SWITCH_PLUG ={
 }
 class Plug extends Subdevice {
     constructor (opts) {
-        super({ sid: opts.sid, sendData:opts.sendData,type: 'plug' });
+        super({ sid: opts.sid, sendData:opts.sendData,type: 'plug' ,queryData:opts.queryData});
 
         this.timeHandle = [];
 
@@ -58,7 +58,7 @@ class Plug extends Subdevice {
 
     }
     writeWQ(wq,value){
-        if(parseInt(wq) == SWITCH_PLUG.status){
+        if(parseInt(wq) === SWITCH_PLUG.status){
             if(value){
                 this.sendDataToDev('status',`"on"`,{sid:this.getSid(),model:'plug'});
             }else{

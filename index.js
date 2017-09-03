@@ -123,7 +123,7 @@ LumiGate.prototype.initDriver = function (options, memories) {
                         }
                         //self.updateWriteState(value.devId,value.wq,value.state,value.param);
                     } catch (e) {
-
+                        console.log('error in process event:',e.message || e);
                     }
 
 

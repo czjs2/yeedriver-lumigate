@@ -8,7 +8,7 @@ const MagWQ = {
 };
 class Magnet extends Subdevice {
   constructor (opts) {
-    super({ sid: opts.sid, sendData:opts.sendData,type: 'magnet' })
+    super({ sid: opts.sid, sendData:opts.sendData,type: 'magnet' ,queryData:opts.queryData})
 
     this._open = null
   }

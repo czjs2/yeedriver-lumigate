@@ -15,7 +15,7 @@ const SWITCH_WQ ={
 }
 class Switch extends Subdevice {
   constructor (opts) {
-    super({ sid: opts.sid, sendData:opts.sendData,type: 'switch' });
+    super({ sid: opts.sid, sendData:opts.sendData,type: 'switch' ,queryData:opts.queryData});
       this.wqs[SWITCH_WQ.battery] = 0;
       this.timeHandle = null;
       this.dbTimeHandle = null;
@@ -62,4 +62,4 @@ class Switch extends Subdevice {
 
 }
 
-module.exports = Switch
+module.exports = Switch;

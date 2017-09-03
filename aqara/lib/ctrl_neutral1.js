@@ -16,7 +16,7 @@ const SWITCH_WQ ={
 }
 class Ctrl_neutral1 extends Subdevice {
     constructor (opts) {
-        super({ sid: opts.sid, sendData:opts.sendData,type: '86ctrl_neutral' });
+        super({ sid: opts.sid, sendData:opts.sendData,type: '86ctrl_neutral' ,queryData:opts.queryData});
 
         this.timeHandle = null;
 
