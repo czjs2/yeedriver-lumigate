@@ -78,12 +78,12 @@ class Aqara extends events.EventEmitter {
                 gateway.on('writeError', function (devId) {
                     this.emit('writeError', devId)
                 }.bind(this));
-                gateway.on('offline', () => {
+             /*   gateway.on('offline', () => {
                     gateway.removeAllListeners('offline');
                     gateway.removeAllListeners('updateWQState');
-                    delete this._gateways[parsed.sid]
+                    //delete this._gateways[parsed.sid]
                     this._triggerWhois();
-                });
+                });*/
                 this._gateways[parsed.sid] = gateway;
                 this.emit('gateway', gateway);
 
