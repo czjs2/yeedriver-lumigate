@@ -28,7 +28,7 @@ class Motion extends Subdevice {
        this.timeHandle[WQ.state] = setTimeout(function(){
            this.wqs[WQ.state]= false;
            this.emit('wqChanged',WQ.state,cmd);
-       }.bind(this),3000);
+       }.bind(this),5000);
    }
   }
 
