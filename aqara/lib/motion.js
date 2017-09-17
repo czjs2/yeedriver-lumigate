@@ -3,10 +3,10 @@ const Subdevice = require('./subdevice')
  * WQ/ep
  * 1 门磁状态
  */
-const MagWQ = {
+const WQ = {
   "state":1
 };
-class Magnet extends Subdevice {
+class Motion extends Subdevice {
   constructor (opts) {
     super({ sid: opts.sid,sendData:opts.sendData, type: 'motion' })
 
@@ -20,15 +20,15 @@ class Magnet extends Subdevice {
 
 
    if(state.status === 'motion'){
-       if(this.timeHandle[MagWQ.state]){
-           clearTimeout(this.timeHandle[MagWQ.state])
+       if(this.timeHandle[WQ.state]){
+           clearTimeout(this.timeHandle[WQ.state])
        }
-       this.wqs[MagWQ.state] = true;
-       this.emit('wqChanged',MagWQ.state,cmd);
-       this.timeHandle[MagWQ.state] = setTimeout(function(){
-           this.wqs[MagWQ.state]= false;
-           this.emit('wqChanged',MagWQ.state,cmd);
-       }.bind(this),61000);
+       this.wqs[WQ.state] = true;
+       this.emit('wqChanged',WQ.state,cmd);
+       this.timeHandle[WQ.state] = setTimeout(function(){
+           this.wqs[WQ.state]= false;
+           this.emit('wqChanged',WQ.state,cmd);
+       }.bind(this),3000);
    }
   }
 
@@ -37,4 +37,4 @@ class Magnet extends Subdevice {
   }
 }
 
-module.exports = Magnet;
+module.exports = Motion;
