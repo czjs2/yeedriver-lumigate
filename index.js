@@ -39,7 +39,7 @@ LumiGate.prototype.initDriver = function (options, memories) {
             });
 
             gateway.on('offline', () => {
-                gateway = null;
+                //gateway = null;
                 console.log('Gateway is offline')
             });
 

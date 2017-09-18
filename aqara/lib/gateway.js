@@ -103,11 +103,19 @@ class Gateway extends events.EventEmitter {
           const payload = `{"cmd": "read", "sid": "${sid}"}`
           this._sendUnicast(payload)
         }
+          if (msg.sid === this._sid) {
+              this._refreshKey(msg.token);
+              this._rearmWatchdog()
+          }
         break;
       case 'read_ack':
 
         sid = msg.sid;
         type = msg.model || "ctrl_neutral2";
+          if (msg.sid === this._sid) {
+
+              this._rearmWatchdog()
+          }
         state = JSON.parse(msg.data);
 
         if (sid === this._sid) { // self
@@ -160,6 +168,10 @@ class Gateway extends events.EventEmitter {
       case 'report':
         case 'write_ack':
         state = JSON.parse(msg.data);
+            if (msg.sid === this._sid) {
+
+                this._rearmWatchdog()
+            }
         if (msg.sid === this._sid){
             this._handleState(state,msg.cmd); // self
         }

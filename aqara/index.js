@@ -104,11 +104,17 @@ class Aqara extends events.EventEmitter {
     getDevice(devId) {
         let device;
         _.each(this._gateways, function (gw, key) {
-            let subDev = gw.getDevice(devId);
-            if (subDev) {
-                device = subDev;
-                return true;
+            if(!gw){
+                console.error(`no gw found: ${key}`);
+                console.log(_.keys(this._gateways));
+            }else{
+                let subDev = gw.getDevice(devId);
+                if (subDev) {
+                    device = subDev;
+                    return true;
+                }
             }
+
         });
         return device;
     }
