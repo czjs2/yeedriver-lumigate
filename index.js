@@ -79,6 +79,9 @@ LumiGate.prototype.initDriver = function (options, memories) {
                 }
             });
             gateway.on('fireEvent', (data) => {
+                function checkEqual(val1,val2){
+                    return (_.isObject(val1)?_.isEqual(val1,val2):(val1 == val2));  //必须是==而不是===
+                }
 
                     try {
 
@@ -98,7 +101,7 @@ LumiGate.prototype.initDriver = function (options, memories) {
                             case 'read_ack':
                                 //不做状态转移的动作
                                 if (curState === consts.WRITE_STATE.CONFIRM) {
-                                    if (_.isEqual(data.value, this.wqs_target[data.devId][data.wq].value)) {
+                                    if (checkEqual(data.value, this.wqs_target[data.devId][data.wq].value)) {
                                         self.updateWriteState(data.devId, data.wq, consts.WRITE_STATE.IDLE);
                                     } else {
                                         self.updateWriteState(data.devId, data.wq, consts.WRITE_STATE.FAILED);
@@ -107,7 +110,7 @@ LumiGate.prototype.initDriver = function (options, memories) {
                                 break;
                             case 'write_ack':
                                 if (curState !== undefined && curState !== consts.WRITE_STATE.IDLE) {
-                                    if (_.isEqual(data.value, this.wqs_target[data.devId][data.wq].value)) {
+                                    if (checkEqual(data.value, this.wqs_target[data.devId][data.wq].value)) {
                                         checkConfirm(data.devId, data.wq);
                                     } else {
                                         self.updateWriteState(data.devId, data.wq, consts.WRITE_STATE.PENDING);
@@ -115,7 +118,7 @@ LumiGate.prototype.initDriver = function (options, memories) {
                                 }
                                 break;
                             case 'report':
-                                if (_.isEqual(data.value, (this.wqs_target[data.devId] && this.wqs_target[data.devId][data.wq] && this.wqs_target[data.devId][data.wq].value))) {
+                                if (checkEqual(data.value, (this.wqs_target[data.devId] && this.wqs_target[data.devId][data.wq] && this.wqs_target[data.devId][data.wq].value))) {
 
                                     checkConfirm(data.devId, data.wq);
                                 }

@@ -88,7 +88,7 @@ class Gateway extends events.EventEmitter {
       this._sendUnicast(payload)
   }
   _handleMessage (msg) {
-    //console.log('messsage:',msg);
+   // console.log('messsage:',msg);
     let sid;
     let type;
     let state;
@@ -356,7 +356,8 @@ class Gateway extends events.EventEmitter {
     }
   }
   readWQ(wq){
-    return this.wqs[wq];
+
+    return this.wqs[wq] === undefined? this.wqs_target[wq]:this.wqs[wq];
   }
 
     goToConfirm(wq){
