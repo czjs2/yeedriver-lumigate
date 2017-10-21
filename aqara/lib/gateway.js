@@ -103,7 +103,7 @@ class Gateway extends events.EventEmitter {
     }
 
     _handleMessage(msg) {
-         console.log('messsage:',msg);
+   //      console.log('messsage:',msg);
         let sid;
         let type;
         let state;
