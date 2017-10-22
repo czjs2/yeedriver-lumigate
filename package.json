@@ -25,6 +25,6 @@
     "lodash": "^4.17.4",
     "q": "^1.5.0",
     "q-io": "^1.13.4",
-    "yeedriver-base": "^1.0.1"
+    "yeedriver-base": "^1.0.8"
   }
 }
