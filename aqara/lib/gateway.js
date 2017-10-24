@@ -382,7 +382,7 @@ class Gateway extends events.EventEmitter {
                 this.wqs[WQInfo.music_id] = value;
                 if (this.wqs_target[WQInfo.music_switch]) {
                     this.pending_write = [WQInfo.music_id];
-                    this.writeValueToDev('mid', this.wqs_target[WQInfo.music_id]);
+                    this.writeValueToDev('mid', parseInt(this.wqs_target[WQInfo.music_id]));
                 }
                 this.triggerWq(this._sid, WQInfo.music_id, 'write_ack');
                 break;
@@ -404,9 +404,9 @@ class Gateway extends events.EventEmitter {
                 if (value) {
                     this.pending_write = [WQInfo.music_switch];
 
-                    this.writeValueToDev('mid', this.wqs_target[WQInfo.music_id]);
+                    this.writeValueToDev('mid', parseInt(this.wqs_target[WQInfo.music_id]));
                     this.repeat_timer = setInterval(()=>{
-                        this.writeValueToDev('mid', this.wqs_target[WQInfo.music_id]);
+                        this.writeValueToDev('mid', parseInt(this.wqs_target[WQInfo.music_id]));
                     },MUSIC_ID_LAST[this.wqs_target[WQInfo.music_id]]||6000);
                 } else {
                     this.pending_write = [WQInfo.music_switch];
