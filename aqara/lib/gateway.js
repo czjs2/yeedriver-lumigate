@@ -77,6 +77,11 @@ class Gateway extends events.EventEmitter {
     }
 
 
+    release(){
+        _.each(this.eventNames()||[],(name)=>{
+            this.removeAllListeners(name);
+        })
+    }
     enumDevices() {
         const payload = '{"cmd": "get_id_list"}';
         this._sendUnicast(payload);
@@ -102,8 +107,9 @@ class Gateway extends events.EventEmitter {
         this._sendUnicast(payload)
     }
 
+
     _handleMessage(msg) {
-   //      console.log('messsage:',msg);
+     //    console.log('messsage:',msg);
         let sid;
         let type;
         let state;

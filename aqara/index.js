@@ -49,7 +49,7 @@ class Aqara extends events.EventEmitter {
         return this._gateways;
     }
 
-    _handleMessage(msg) {
+    _handleMessage(msg,rInfo) {
         const parsed = JSON.parse(msg.toString());
 
         //console.log('get message:', JSON.stringify(parsed));
@@ -91,9 +91,12 @@ class Aqara extends events.EventEmitter {
         }
 
         if (!handled) { // propagate to gateways
-            for (const gateway of _.values(this._gateways)) {
+            let gateway = _.find(this._gateways,(gw)=>{
+                return gw._ip === rInfo.address;
+            });
+
+            if(gateway){
                 handled = gateway._handleMessage(parsed);
-                if (handled) break
             }
         }
 
@@ -151,11 +154,19 @@ class Aqara extends events.EventEmitter {
         return result;
     }
 
+    releaseGWs(){
+        _.each(this._gateways,(gateway)=>{
+            gateway.release();
+        });
+        this._gateways = {};
+    }
     //重新查询所有的设备
     EnumDevices() {
         if (this.enumDeviceMute === 0) {
             this.enumDeviceMute = 20;
+
             this._triggerWhois();
+
             setTimeout(() => {
                 _.each(this._gateways, function (gateway) {
                     gateway.enumDevices();

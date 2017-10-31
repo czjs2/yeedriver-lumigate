@@ -168,6 +168,7 @@ LumiGate.prototype.setInOrEx = function (option) {
         //向网关查询一遍
         var addDevices = {};
         var delDevices = {};
+        this.gatewayMaster.releaseGWs();
         this.gatewayMaster.EnumDevices();
         setTimeout(function () {
             //3秒后对比数据
