@@ -5,6 +5,7 @@ const _ = require('lodash');
 const consts = require('yeedriver-base/consts')
 const {MULTICAST_ADDRESS, DISCOVERY_PORT, SERVER_PORT} = require('./constants');
 const Gateway = require('./lib/gateway');
+const Q = require('q');
 
 class Aqara extends events.EventEmitter {
     constructor(master) {
@@ -61,12 +62,20 @@ class Aqara extends events.EventEmitter {
                     handled = true;
                     this._triggerWhois();
                 }
+                else {
+                    this._gateways[parsed.sid]._inSids = (this.master.rawOptions && this.master.rawOptions.sids[parsed.sid])?true:false;
+                }
                 break;
             case 'iam':
                 handled = true;
-                if (this._gateways[parsed.sid])
+                if (this._gateways[parsed.sid]){
+                    this._gateways[parsed.sid]._inSids = (this.master.rawOptions.sids && this.master.rawOptions.sids[parsed.sid]);
                     break;
+                }
+
+
                 const gateway = new Gateway({
+                    inSids:(this.master.rawOptions.sids && this.master.rawOptions.sids[parsed.sid])?true:false,
                     ip: parsed.ip,
                     sid: parsed.sid,
                     sendUnicast: (payload) => this._serverSocket.send(payload, 0, payload.length, SERVER_PORT, parsed.ip),
@@ -182,15 +191,56 @@ class Aqara extends events.EventEmitter {
     /**
      * 获取当前所有的设备信息
      */
-    getDevicesList() {
+    getDevicesList(getAll) {
         let result = {};
         _.each(this.gateways, function (gateway, gwId) {
-            result[gwId] = {uniqueId: 'gateway'};
-            _.each(gateway.subdevices, function (device, deviceID) {
-                result[deviceID] = {uniqueId: device.getType()};
-            });
+            if(gateway._inSids || getAll){
+                result[gwId] = {uniqueId: 'gateway'};
+                _.each(gateway.subdevices, function (device, deviceID) {
+                    result[deviceID] = {uniqueId: device.getType()};
+                });
+            }
+
         });
         return result;
+    }
+
+    removeDevice(deviceId,isGateway){
+        if(isGateway){
+            if(this.gateways[deviceId]){
+                this.gateways[deviceId].release();
+                delete this.gateways[deviceId];
+            }
+            else {
+                return Q.reject('no gateway');
+            }
+
+        }
+        else {
+            _.each(this.gateways, function (gateway, gwId) {
+                gateway.writeValueToDev("remove_device",`"${deviceId}"`);
+            });
+        }
+        return Q.resolve({});
+
+    }
+
+    joinPermission(permission,gateway){
+        let tarGateway ;
+        if(gateway){
+            tarGateway = gateway;
+        }
+        else{
+            tarGateway = _.keys(this.gateways)[0];
+        }
+        if(this.gateways[tarGateway]){
+            this.gateways[tarGateway].writeValueToDev("join_permission",`"${permission}"`);
+            return Q.resolve({});
+        }
+        else {
+            return Q.reject('no gateway');
+        }
+
     }
 }
 

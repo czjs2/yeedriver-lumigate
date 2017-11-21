@@ -12,7 +12,10 @@ const WQInfo = {
     'illumination': 3,
     'music_id': 4,
     'volumn': 5,
-    'music_switch': 6
+    'music_switch': 6,
+    'join_permission':7,
+    'remove_device':8,
+    'proto_version':9,
 
 };
 const MUSIC_ID_LAST = {
@@ -46,6 +49,7 @@ class Gateway extends events.EventEmitter {
         this._ip = opts.ip;
         this._sid = opts.sid;
         this._sendUnicast = opts.sendUnicast;
+        this._inSids = opts.inSids;
         this.evtMaster = opts.evtMaster;
         this._heartbeatWatchdog = null;
         this._rearmWatchdog();
@@ -109,7 +113,7 @@ class Gateway extends events.EventEmitter {
 
 
     _handleMessage(msg) {
-     //    console.log('messsage:',msg);
+        // console.log('messsage:',msg);
         let sid;
         let type;
         let state;

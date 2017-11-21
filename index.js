@@ -174,7 +174,7 @@ LumiGate.prototype.setInOrEx = function (option) {
             //3秒后对比数据
             var self = this;
             var rawOptIds = (self.rawOptions && self.rawOptions.sids) || {};
-            let newDevices = this.gatewayMaster.getDevicesList();
+            let newDevices = this.gatewayMaster.getDevicesList(true);
             _.each(newDevices, function (devInfo, devId) {
                 if (rawOptIds[devId] === undefined) {
                     addDevices[devId] = devInfo;
@@ -194,6 +194,65 @@ LumiGate.prototype.setInOrEx = function (option) {
             //console.log('removed Devices:',delDevices);
         }.bind(this), 3000);
     }
+}
+
+LumiGate.prototype.joinPermission = function (option) {
+    return this.gatewayMaster.joinPermission(option.permission,option.gateway);
+}
+
+LumiGate.prototype.removeDevice = function (option) {
+    return this.gatewayMaster.removeDevice(option.uniqueKey,option.uniqueId == 'gateway');
+}
+
+LumiGate.prototype.getDevice = function (option) {
+
+    let deferred = Q.defer();
+
+    if (!option.isClose) {
+        //向网关查询一遍
+        var addDevices = {};
+        var delDevices = {};
+        this.gatewayMaster.releaseGWs();
+        this.gatewayMaster.EnumDevices();
+        setTimeout(function () {
+            //3秒后对比数据
+            var self = this;
+            var rawOptIds = (self.rawOptions && self.rawOptions.sids) || {};
+            let newDevices = this.gatewayMaster.getDevicesList(option.uniqueId);
+            _.each(newDevices, function (devInfo, devId) {
+                if (rawOptIds[devId] === undefined) {
+                    if(!option.uniqueId){
+                        addDevices[devId] = devInfo;
+                    }
+                    else if (devInfo.uniqueId == option.uniqueId){
+                        addDevices[devId] = devInfo;
+                    }
+                }
+            });
+
+            _.each(rawOptIds, function (devInfo, devId) {
+                if (newDevices[devId] === undefined) {
+                    delDevices[devId] = devInfo;
+                }
+            });
+
+            if(option.removed){
+                deferred.resolve(delDevices);
+            }
+            else {
+                deferred.resolve(addDevices);
+            }
+
+
+
+            //console.log('removed Devices:',delDevices);
+        }.bind(this), 3000);
+    }
+    else {
+        deferred.reject('is close');
+    }
+
+    return deferred.promise;
 }
 
 util.inherits(LumiGate, WorkerBase)
