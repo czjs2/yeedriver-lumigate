@@ -58,13 +58,16 @@ class Aqara extends events.EventEmitter {
 
         switch (parsed.cmd) {
             case 'heartbeat':
-                if (!this._gateways[parsed.sid]) {
-                    handled = true;
-                    this._triggerWhois();
+                if (parsed.model==='gateway'){
+                    if (!this._gateways[parsed.sid]) {
+                        handled = true;
+                        this._triggerWhois();
+                    }
+                    else {
+                        this._gateways[parsed.sid]._inSids = (this.master.rawOptions.sids && this.master.rawOptions.sids[parsed.sid])?true:false;
+                    }
                 }
-                else {
-                    this._gateways[parsed.sid]._inSids = (this.master.rawOptions && this.master.rawOptions.sids[parsed.sid])?true:false;
-                }
+
                 break;
             case 'iam':
                 handled = true;
@@ -78,6 +81,7 @@ class Aqara extends events.EventEmitter {
                     inSids:(this.master.rawOptions.sids && this.master.rawOptions.sids[parsed.sid])?true:false,
                     ip: parsed.ip,
                     sid: parsed.sid,
+                    password:(this.master.rawOptions.tokens && this.master.rawOptions.tokens[parsed.sid]),
                     sendUnicast: (payload) => this._serverSocket.send(payload, 0, payload.length, SERVER_PORT, parsed.ip),
                     evtMaster: this.master
                 });

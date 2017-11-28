@@ -24,7 +24,7 @@ class Subdevice extends events.EventEmitter {
       this.wqs[BATTERY] = this._voltage;
       this.wqs[BATTERY_PERCENT] = this.getBatteryPercentage();
       this.emit('wqChanged',BATTERY,cmd);
-        this.emit('wqChanged',BATTERY_PERCENT,cmd);
+      this.emit('wqChanged',BATTERY_PERCENT,cmd);
     }
 
       if(state.error){
@@ -52,7 +52,7 @@ class Subdevice extends events.EventEmitter {
   }
 
   getBatteryPercentage () {
-    return ((SUBDEVICE_MAX_VOLT - this._voltage) / (SUBDEVICE_MAX_VOLT - SUBDEVICE_MIN_VOLT)) * 100
+    return ((this._voltage - SUBDEVICE_MIN_VOLT) / (SUBDEVICE_MAX_VOLT - SUBDEVICE_MIN_VOLT)) * 100
   }
 
   writeWQ(wq,value){

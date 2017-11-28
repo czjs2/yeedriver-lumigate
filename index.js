@@ -33,7 +33,7 @@ LumiGate.prototype.initDriver = function (options, memories) {
 //            console.log('Gateway discovered')
             gateway.on('ready', () => {
                 console.log('Gateway is ready')
-                gateway.setPassword((_.isObject(this.rawOptions.tokens) && this.rawOptions.tokens[gateway.sid]) || 'sotxcen2i4otuj7z');
+                // gateway.setPassword((_.isObject(this.rawOptions.tokens) && this.rawOptions.tokens[gateway.sid]) || 'sotxcen2i4otuj7z');
                 gateway.setColor({r: 255, g: 0, b: 0});
                 gateway.setIntensity(100)
             });
@@ -118,6 +118,7 @@ LumiGate.prototype.initDriver = function (options, memories) {
                                 }
                                 break;
                             case 'report':
+                            case 'heartbeat':
                                 if (checkEqual(data.value, (this.wqs_target[data.devId] && this.wqs_target[data.devId][data.wq] && this.wqs_target[data.devId][data.wq].value))) {
 
                                     checkConfirm(data.devId, data.wq);
@@ -192,7 +193,7 @@ LumiGate.prototype.setInOrEx = function (option) {
                 this.inOrEx({type: "ex", devices: delDevices});
             }
             //console.log('removed Devices:',delDevices);
-        }.bind(this), 3000);
+        }.bind(this), option.timeout || 6000);
     }
 }
 
@@ -246,7 +247,7 @@ LumiGate.prototype.getDevice = function (option) {
 
 
             //console.log('removed Devices:',delDevices);
-        }.bind(this), 3000);
+        }.bind(this),option.timeout-2000 || 6000);
     }
     else {
         deferred.reject('is close');

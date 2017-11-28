@@ -13,9 +13,7 @@ const WQInfo = {
     'music_id': 4,
     'volumn': 5,
     'music_switch': 6,
-    'join_permission':7,
-    'remove_device':8,
-    'proto_version':9,
+    'proto_version':7,
 
 };
 const MUSIC_ID_LAST = {
@@ -50,6 +48,7 @@ class Gateway extends events.EventEmitter {
         this._sid = opts.sid;
         this._sendUnicast = opts.sendUnicast;
         this._inSids = opts.inSids;
+        this._password = opts.password;
         this.evtMaster = opts.evtMaster;
         this._heartbeatWatchdog = null;
         this._rearmWatchdog();
@@ -117,9 +116,10 @@ class Gateway extends events.EventEmitter {
         let sid;
         let type;
         let state;
+        this._rearmWatchdog();
         switch (msg.cmd) {
             case 'get_id_list_ack':
-                this._refreshKey(msg.token)
+                this._refreshKey(msg.token);
 
                 const payload = `{"cmd": "read", "sid": "${this._sid}"}`
                 this._sendUnicast(payload)
@@ -189,18 +189,14 @@ class Gateway extends events.EventEmitter {
                 }
                 break;
             case 'heartbeat':
-                if (msg.sid === this._sid) {
-                    this._refreshKey(msg.token);
-                    this._rearmWatchdog()
-                }
-                break;
             case 'report':
             case 'write_ack':
-                state = JSON.parse(msg.data);
-                if (msg.sid === this._sid) {
 
-                    this._rearmWatchdog()
+                state = JSON.parse(msg.data);
+                if (msg.sid === this._sid && msg.cmd === 'heartbeat' &&  msg.token) {
+                    this._refreshKey(msg.token);
                 }
+
                 if (msg.sid === this._sid) {
                     this._handleState(state, msg.cmd); // self
                 }
@@ -256,6 +252,11 @@ class Gateway extends events.EventEmitter {
             }
             this.triggerWq(this._sid, WQInfo.music_switch, cmd);
             this.triggerWq(this._sid, WQInfo.music_id, cmd);
+        }
+
+        if (state.proto_version !== undefined){
+            this.wqs[WQInfo.proto_version] = state.proto_version;
+            this.triggerWq(this._sid, WQInfo.proto_version, cmd);
         }
 
 
