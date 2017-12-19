@@ -18,6 +18,9 @@ class Motion extends Subdevice {
     super._handleState(state,cmd);
 
 
+    if(cmd ==='heartbeat'){
+        return;
+    }
 
    if(state.status === 'motion'){
        if(this.timeHandle[WQ.state]){
