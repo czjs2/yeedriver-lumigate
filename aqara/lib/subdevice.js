@@ -21,7 +21,7 @@ class Subdevice extends events.EventEmitter {
   _handleState (state,cmd) {
     if (typeof state.voltage !== 'undefined') {
       this._voltage = state.voltage;
-      this.wqs[BATTERY] = this._voltage;
+      this.wqs[BATTERY] = this._voltage /1000;
       this.wqs[BATTERY_PERCENT] = this.getBatteryPercentage();
       this.emit('wqChanged',BATTERY,cmd);
       this.emit('wqChanged',BATTERY_PERCENT,cmd);

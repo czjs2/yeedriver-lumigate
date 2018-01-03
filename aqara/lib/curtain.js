@@ -39,22 +39,28 @@ class curtain extends Subdevice {
         let cmd = "status";
         switch (parseInt(wq)){
             case CURTAIN_WQ.open:
-                writeValue = "open";
+                this.wqs_target[wq] = "open";
                 break;
             case CURTAIN_WQ.close:
-                writeValue = "close";
+                this.wqs_target[wq] = "close";
                 break;
             case CURTAIN_WQ.stop:
-                writeValue = "stop";
+                this.wqs_target[wq] = "stop";
                 break;
             case CURTAIN_WQ.curtain_level:
                 cmd = "curtain_level";
-                writeValue = value;
+                this.wqs_target[wq] = value;
                 break;
         }
 
-        return this.sendDataToDev(cmd, `"${writeValue}"`, {sid: this.getSid(), model: 'curtain'});
+        
+        
+        return this.sendDataToDev(cmd, `"${this.wqs_target[wq]}"`, {sid: this.getSid(), model: 'curtain'});
 
+    }
+
+    readWQ(wq) {
+        return this.wqs[wq] === undefined ? this.wqs_target[wq] : this.wqs[wq];
     }
 
     goToConfirm(wq){

@@ -33,6 +33,14 @@ class Motion extends Subdevice {
            this.emit('wqChanged',WQ.state,cmd);
        }.bind(this),59000);
    }
+
+   if(state.no_motion){
+       if(this.timeHandle[WQ.state]){
+           clearTimeout(this.timeHandle[WQ.state])
+       }
+       this.wqs[WQ.state]= false;
+       this.emit('wqChanged',WQ.state,cmd);
+   }
   }
 
   isOpen () {
