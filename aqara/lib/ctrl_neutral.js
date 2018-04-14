@@ -11,10 +11,9 @@ const Subdevice = require('./subdevice')
  * 60010 double click
  */
 const SWITCH_WQ ={
-    'click':1,
-    'light':2,
+    'channel0':1,
 }
-class Ctrl_neutral1 extends Subdevice {
+class Ctrl_neutral extends Subdevice {
     constructor (opts) {
         super({ sid: opts.sid, sendData:opts.sendData,type: '86ctrl_neutral' ,queryData:opts.queryData});
 
@@ -27,32 +26,22 @@ class Ctrl_neutral1 extends Subdevice {
 
         if (typeof state.channel_0 === 'undefined')
             return; // might be no_close
-
         switch (state.channel_0) {
-            case 'click':
-                if(this.timeHandle){
-                    clearTimeout(this.timeHandle)
-                }
-                this.wqs[SWITCH_WQ.click] = true;
-                this.emit('wqChanged',SWITCH_WQ.click,cmd);
-                this.timeHandle = setTimeout(function(){
-                    this.wqs[SWITCH_WQ.click] = false;
-                    this.emit('wqChanged',SWITCH_WQ.click,cmd);
-                }.bind(this),200);
-                break;
+
             case 'on':
 
-                this.wqs[SWITCH_WQ.light] = true;
-                this.emit('wqChanged',SWITCH_WQ.light,cmd);
+                this.wqs[SWITCH_WQ.channel0] = true;
+                this.emit('wqChanged',SWITCH_WQ.channel0,cmd);
 
                 break;
             case 'off':
-                this.wqs[SWITCH_WQ.light] = false;
-                this.emit('wqChanged',SWITCH_WQ.light,cmd);
+                this.wqs[SWITCH_WQ.channel0] = false;
+                this.emit('wqChanged',SWITCH_WQ.channel0,cmd);
 
                 break;
 
         }
+
     }
     writeWQ(wq,value){
         if(parseInt(wq) == SWITCH_WQ.light){
@@ -67,4 +56,4 @@ class Ctrl_neutral1 extends Subdevice {
 
 }
 
-module.exports = Ctrl_neutral1;
+module.exports = Ctrl_neutral;
