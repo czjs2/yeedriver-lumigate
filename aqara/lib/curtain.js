@@ -1,5 +1,6 @@
 
 const Subdevice = require('./subdevice');
+const _ = require('lodash');
 
 const CURTAIN_WQ ={
     'open':1,
@@ -10,7 +11,7 @@ const CURTAIN_WQ ={
 
 class curtain extends Subdevice {
     constructor(opts) {
-        super({sid: opts.sid, sendData: opts.sendData, type: 'curtain'});
+        super({queryData:opts.queryData,sid: opts.sid, sendData: opts.sendData, triggerWq:opts.triggerWq,type: 'curtain'});
 
         this.timeHandle = [];
 
@@ -53,23 +54,19 @@ class curtain extends Subdevice {
                 break;
         }
 
-        
-        
-        return this.sendDataToDev(cmd, `"${this.wqs_target[wq]}"`, {sid: this.getSid(), model: 'curtain'});
+        this.sendDataToDev(cmd, `"${this.wqs_target[wq]}"`, {sid: this.getSid(), model: 'curtain'});
+        if(cmd == "status"){
+            this.triggerWq(this._sid, wq, 'write_ack');
+        }
 
     }
 
     readWQ(wq) {
-        return this.wqs[wq] === undefined ? this.wqs_target[wq] : this.wqs[wq];
+        return this.wqs[wq] === undefined ? true : this.wqs[wq];
     }
 
     goToConfirm(wq){
-        this.queryData(this._sid);
-
-        if (parseInt(wq)<3){
-            return true;
-        }
-
+        return false;
     }
 }
 module.exports = curtain;

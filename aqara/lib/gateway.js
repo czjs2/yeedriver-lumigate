@@ -157,7 +157,8 @@ class Gateway extends events.EventEmitter {
                         subdevice = new this.SubDevType[type]({
                             sid,
                             sendData: this.writeValueToDev.bind(this),
-                            queryData: this.sendQuery.bind(this)
+                            queryData: this.sendQuery.bind(this),
+                            triggerWq:this.triggerWq.bind(this)
                         });
                         this._subdevices[msg.sid] = subdevice;
                         subdevice.on('wqChanged', function (wq, cmd) {

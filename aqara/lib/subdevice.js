@@ -11,6 +11,7 @@ class Subdevice extends events.EventEmitter {
     this._type = opts.type;
     this.sendData = opts.sendData;
     this.queryData = opts.queryData;
+    this.triggerWq = opts.triggerWq;
     this._voltage = null;
     this.wqs = {};
     this.wqs_target = {};
