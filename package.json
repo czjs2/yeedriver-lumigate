@@ -1,6 +1,6 @@
 {
   "name": "yeedriver-lumigate",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "lumigate",
   "main": "index.js",
   "scripts": {
