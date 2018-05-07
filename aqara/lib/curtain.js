@@ -23,7 +23,7 @@ class curtain extends Subdevice {
 
 
         if (state.curtain_level) {
-            this.wqs[CURTAIN_WQ.curtain_level] = parseInt((parseInt(state.curtain_level) * 100 / 255).toFixed(0));
+            this.wqs[CURTAIN_WQ.curtain_level] = parseInt(state.curtain_level)>100? 100 : parseInt(state.curtain_level);
             this.emit('wqChanged', CURTAIN_WQ.curtain_level, cmd);
 
         }
